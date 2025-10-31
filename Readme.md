@@ -20,8 +20,22 @@ Next,
 Open Touchdesigner project from within the directory.
 
 Actual result:
-Console displays what appears to be a working virtual environment, but StateExtensions.py clearly has some error, as none of 
-the Debug Outputs are ever displayed in console. To fully test it, you can execute the same commands, and (hopefully) see
+Console displays what appears to be a working virtual environment, returning: 
+
+TouchDesigner  Build 2023.12480 compile on Mon Sep 22 20:10:42 2025
+Python 3.11.1 (heads/3.11-Derivative-dirty:82b0389147, Jan 25 2023, 22:34:27) [MSC v.1929 64 bit (AMD64)]
+
+--- TD Startup Sequence: Executing external path setup (onStart) --- 
+  (Debug - DAT:/project1/start_state_machine fn:onStart line:20)
+SUCCESS: Virtual Env path added to sys.path. Path: D:\FileReciever\TouchDesigner\BlenderIntegration\.venv\Lib\site-packages 
+  (Debug - DAT:/project1/start_state_machine fn:onStart line:30)
+--- TD Startup Sequence: Path setup complete --- 
+  (Debug - DAT:/project1/start_state_machine fn:onStart line:38)
+python >>> 
+
+However, StateExtensions.py clearly has some error, as none of 
+the Debug Outputs are ever displayed in console. To fully test it, 
+you can execute the same commands, and (hopefully) see
 the same results:
 
 AttributeError: 'StateExtension' object has no attribute 'is_GameMode'
