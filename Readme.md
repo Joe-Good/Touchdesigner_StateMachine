@@ -11,3 +11,7 @@
 7. In PyCharm > Open Terminal > Enter command: pip install transitions > Allow to complete
   - Also update pip to latest (currently 25.3)
 7. Confirm "transitions" folder exists now in: \.venv\Lib\site-packages
+8. In PyCharm Interpreter > Change directories to execute the following: 
+\Touchdesigner_StateMachine\Python\Scripts\Debugging> python .\test_fsm_post_automation.py  
+9. Key indicator of success is the console displays: 
+DEBUG 5: FSM successfully bound. Current state: Attract
