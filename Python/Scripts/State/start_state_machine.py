@@ -1,45 +1,56 @@
 # start_state_machine.py
 # DAT: /project1/start_state_machine (Execute DAT set to fire onStart)
-
-import sys
-
-
-# The 'debug' function is automatically available in TD scripts [3, 4]
-
 # ==============================================================================
-# Execute DAT Callbacks
+# DAT: /project1/start_state_machine (Execute DAT set to fire onStart)
+# PURPOSE: Dynamically calculate and prepend the Virtual Environment path to sys.path
+# to allow TouchDesigner to find external packages (e.g., 'pytransitions').
 # ==============================================================================
+# me - this DAT
+#
+# frame - the current frame
+# state - True if the timeline is paused
+#
+# Make sure the corresponding toggle is enabled in the Execute DAT.
 
 def onStart():
-    """
-    Executes on TouchDesigner startup to ensure the external pytransitions library
-    is accessible by modifying sys.path.
-    """
+    # We rely on sys and os modules, which are part of the standard Python environment
+    # available in TouchDesigner [6, 7].
+    import sys
+    import os
 
-    # Use the direct debug() function, which is globally available in TD scripts [3]
+    # Debug statements are crucial for confirming execution during TD startup [8].
     debug("--- TD Startup Sequence: Executing external path setup (onStart) ---")
 
+    # 1. Determine the project root directory.
+    # 'project.folder' returns the absolute path of the directory containing the saved .toe file.
+    # We assume the .venv folder is located here [4, 5].
     try:
-        # 1. Define the Virtual Environment's site-packages path using a raw string (r"...")
-        # Path confirmed by user: D:\FileReciever\TouchDesigner\BlenderIntegration\.venv\Lib\site-packages
-        mypath = r"D:\FileReciever\TouchDesigner\BlenderIntegration\.venv\Lib\site-packages"
+        project_root_dir = project.folder
 
+        # Define the relative path to site-packages within the standard venv structure.
+        # Use os.path.join for cross-platform compatibility.
+        relative_venv_path = os.path.join(".venv", "Lib", "site-packages")
+
+        # Construct the full, soft-coded path
+        mypath = os.path.join(project_root_dir, relative_venv_path)
+
+        # 2. Check if the path exists and add it if necessary
+        # Prepending ensures your custom packages have priority over TouchDesigner's built-in ones [9, 10].
         if mypath not in sys.path:
-            # Prepending ensures your custom packages (like pytransitions) have priority [6, 7]
             sys.path = [mypath] + sys.path
             debug(f"SUCCESS: Virtual Env path added to sys.path. Path: {mypath}")
         else:
             debug(f"INFO: Virtual Env path already exists in sys.path. Path: {mypath}")
 
     except Exception as e:
-        # Catch errors if path modification fails
-        debug(f"CRITICAL ERROR: Failed to set sys.path for Virtual Environment. Error: {e}")
+        debug(f"ERROR calculating V-Env path: {e}")
 
     debug("--- TD Startup Sequence: Path setup complete ---")
 
-    # We rely on TouchDesigner's extension loader to automatically proceed with loading the StateExtension class now that the path is set [8].
-    return
+    # NOTE: TouchDesigner's extension loader will proceed automatically with loading
+    # extensions (like StateExtension) now that the path is correctly set [11].
 
+    return
 
 def onCreate():
     # If the Execute DAT is created dynamically, you may want to re-run setup here
