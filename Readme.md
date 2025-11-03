@@ -83,3 +83,44 @@ python >>> op.State.ext.StateExtension.ownerComp.path
 # op.State.ext.StateExtension.ownerComp.path
 # op.State.ext.StateExtension.state
 ```
+
+Here are some additional commands which we found at least would return a response/list. 
+We seem to be proving at least a level of introspection for the transitions library from
+within TouchDesigner
+
+```python
+# 1. Direct Object Verification (Command 2)
+# Confirms the extension is loaded and accessible via the 'ext' member.
+print("--- 1. Direct Access Test ---")
+print(op.State.ext.StateExtension) 
+
+# 2. Assignment for Convenience (Command 4)
+# Storing the valid object reference to simplify subsequent code.
+opstate = op.State.ext.StateExtension
+print("--- 2. Object Assigned to Variable ---")
+print(opstate)
+
+# 3. Top-Level Introspection (Command 5 & 6)
+# Immediately asking the object what members it contains, showing success where direct property access (.state) failed.
+# This is crucial for discovering available members like 'B', 'MyProperty', 'a', and 'myFunction'.
+attributes = dir(opstate)
+print("--- 3. Introspection (Available Attributes) ---")
+print(attributes)
+
+# 4. Deep Introspection: Function Metadata (Command 7)
+# Inspecting a specific member, 'myFunction', to see its internal structure.
+print("--- 4. Deep Introspection (myFunction details) ---")
+dir(opstate.myFunction)
+
+# 5. Assignment of Internal Method Reference (Follow-up)
+# Demonstrating access to hidden/dunder methods like __init__.
+stateInit = opstate.myFunction.__init__
+print("--- 5. Assigned Internal Method Reference ---")
+print(stateInit)
+
+# runbook:
+# 1. Ensure a component named 'State' exists at /project1.
+# 2. Ensure the 'State' COMP has an Extension named 'StateExtension' loaded.
+# 3. Paste this code into a Text DAT (e.g., 'test_script').
+# 4. Run the DAT in the TouchDesigner textport: op('test_script').run()
+```
